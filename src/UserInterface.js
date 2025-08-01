@@ -275,6 +275,25 @@ function UserInterface({ kpiList, onUpdateKPI }) {
       }
       return "-";
     }
+    if (kpi.kategori === "Peratus Minimum") {
+      const peruntukan = parseFloat(kpi.peratusMinimum?.y);
+      const belanja = parseFloat(kpi.peratusMinimum?.x);
+      const target = parseFloat(kpi.target);
+      if (!isNaN(peruntukan) && peruntukan > 0 && !isNaN(belanja) && !isNaN(target)) {
+        const actualPercent = (belanja / peruntukan) * 100;
+        if (actualPercent <= target) {
+          return "100.00%";
+        } else {
+          const margin = 100 - target;
+          const excess = actualPercent - target;
+          const penaltyRatio = excess / margin;
+          const markah = (1 - penaltyRatio) * 100;
+          const result = Math.max(0, Math.round(markah * 100) / 100);
+          return result.toFixed(2) + "%";
+        }
+      }
+      return "-";
+    }
     if (kpi.kategori === "Masa") {
       const sasaran = kpi.target;
       const capai = kpi.masa.tarikhCapai;
