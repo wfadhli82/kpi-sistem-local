@@ -260,22 +260,7 @@ function Dashboard({ kpiList = [] }) {
             Pencapaian SKU
           </button>
         </Box>
-        {/* Header */}
-        <AppBar position="static" elevation={0} sx={{ bgcolor: '#fff', color: '#212b36', mb: 3 }}>
-          <Toolbar>
-            <img 
-              src="/kpi-sistem-local/logo-maiwp.png" 
-              alt="MAIWP Logo" 
-              style={{ 
-                height: '40px', 
-                marginRight: '16px'
-              }} 
-            />
-            <Typography variant="h5" sx={{ flexGrow: 1 }}>
-              i-Prestasi
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        
         {/* Summary Cards */}
         <Grid container spacing={3} mb={3} sx={{ display: 'flex', flexWrap: 'nowrap' }}>
           {summaryData.map((item, idx) => (

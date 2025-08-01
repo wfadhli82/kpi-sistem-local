@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, CssBaseline, Drawer, Toolbar, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, CssBaseline, Drawer, Toolbar, List, ListItem, ListItemIcon, ListItemText, AppBar, Typography } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -87,17 +87,49 @@ function MainLayout({ children }) {
   return (
     <Box sx={{ display: 'flex', bgcolor: '#f4f6f8', minHeight: '100vh' }}>
       <CssBaseline />
+      {/* Fixed Header */}
+      <AppBar 
+        position="fixed" 
+        elevation={0} 
+        sx={{ 
+          bgcolor: '#fff', 
+          color: '#212b36', 
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          borderBottom: '1px solid #e0e0e0'
+        }}
+      >
+        <Toolbar>
+          <img 
+            src="/kpi-sistem-local/logo-maiwp.png" 
+            alt="MAIWP Logo" 
+            style={{ 
+              height: '40px', 
+              marginRight: '16px'
+            }} 
+          />
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
+            Sistem Pemantauan Prestasi MAIWP (i-Prestasi)
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      
       <Drawer
         variant="permanent"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', bgcolor: '#212b36', color: '#fff' },
+          [`& .MuiDrawer-paper`]: { 
+            width: drawerWidth, 
+            boxSizing: 'border-box', 
+            bgcolor: '#212b36', 
+            color: '#fff',
+            marginTop: '64px' // Add margin to account for fixed header
+          },
         }}
       >
         <Toolbar>
-                       <span style={{ fontWeight: 700, fontSize: 20 }}>i-Prestasi</span>
-        </Toolbar>
+          <span style={{ fontWeight: 700, fontSize: 20 }}>i-Prestasi</span>
+        </Toolbar>>
         {currentUser && (
           <div style={{ padding: '16px', borderBottom: '1px solid #374151' }}>
             <div style={{ fontSize: '14px', color: '#9ca3af', marginBottom: '4px' }}>Pengguna</div>
@@ -135,9 +167,9 @@ function MainLayout({ children }) {
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {children}
-      </Box>
+             <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px' }}>
+         {children}
+       </Box>
     </Box>
   );
 }
