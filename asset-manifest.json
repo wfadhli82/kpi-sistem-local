@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/kpi-sistem-local/static/css/main.2e448989.css",
-    "main.js": "/kpi-sistem-local/static/js/main.9237a392.js",
+    "main.js": "/kpi-sistem-local/static/js/main.4b3b98fb.js",
     "static/js/453.face5969.chunk.js": "/kpi-sistem-local/static/js/453.face5969.chunk.js",
     "index.html": "/kpi-sistem-local/index.html",
     "main.2e448989.css.map": "/kpi-sistem-local/static/css/main.2e448989.css.map",
-    "main.9237a392.js.map": "/kpi-sistem-local/static/js/main.9237a392.js.map",
+    "main.4b3b98fb.js.map": "/kpi-sistem-local/static/js/main.4b3b98fb.js.map",
     "453.face5969.chunk.js.map": "/kpi-sistem-local/static/js/453.face5969.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2e448989.css",
-    "static/js/main.9237a392.js"
+    "static/js/main.4b3b98fb.js"
   ]
 }
