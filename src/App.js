@@ -673,19 +673,13 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={
-              <ProtectedRoute>
-                <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
-              </ProtectedRoute>
+              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
             } />
             <Route path="/sistem-kpi" element={
-              <ProtectedRoute>
-                <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
-              </ProtectedRoute>
+              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
             } />
             <Route path="/kpi-sistem-local" element={
-              <ProtectedRoute>
-                <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
-              </ProtectedRoute>
+              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
             } />
             <Route path="/admin-utama" element={
               <ProtectedRoute>
