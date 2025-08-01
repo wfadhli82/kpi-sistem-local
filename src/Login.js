@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { firebaseService } from './services/firebaseService';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -16,10 +17,25 @@ function Login() {
   // Helper: set current user session
   const setCurrentUser = (user) => localStorage.setItem('currentUser', JSON.stringify(user));
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    
+    try {
+      // Try Firebase authentication first
+      const result = await firebaseService.authenticateUser(email, password);
+      if (result.success) {
+        setCurrentUser(result.user);
+        setLoading(false);
+        navigate('/');
+        return;
+      }
+    } catch (error) {
+      console.log('Firebase not available, trying localStorage');
+    }
+    
+    // Fallback to localStorage
     setTimeout(() => {
       const users = getUsers();
       console.log('All users in localStorage:', users);

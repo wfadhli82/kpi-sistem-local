@@ -25,6 +25,7 @@ import {
 } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
+import { firebaseService } from './services/firebaseService';
 
 // Available departments
 const departments = [
@@ -46,15 +47,31 @@ const UserManagement = () => {
   });
   const [alert, setAlert] = useState({ show: false, message: '', severity: 'success' });
 
-  // Load users from localStorage on component mount
+  // Load users from Firebase or localStorage on component mount
   useEffect(() => {
-    const savedUsers = localStorage.getItem('users');
-    if (savedUsers) {
-      setUsers(JSON.parse(savedUsers));
-    }
+    const loadUsers = async () => {
+      try {
+        // Try Firebase first
+        const result = await firebaseService.getUsers();
+        if (result.success) {
+          setUsers(result.users);
+          return;
+        }
+      } catch (error) {
+        console.log('Firebase not available, using localStorage');
+      }
+      
+      // Fallback to localStorage
+      const savedUsers = localStorage.getItem('users');
+      if (savedUsers) {
+        setUsers(JSON.parse(savedUsers));
+      }
+    };
+    
+    loadUsers();
   }, []);
 
-  // Save users to localStorage whenever users state changes
+  // Save users to localStorage as backup (Firebase is primary)
   useEffect(() => {
     localStorage.setItem('users', JSON.stringify(users));
   }, [users]);
@@ -100,7 +117,7 @@ const UserManagement = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.role) {
       setAlert({
         show: true,
@@ -130,49 +147,125 @@ const UserManagement = () => {
       return;
     }
 
-    if (editingUser) {
-      // Update existing user
-      const updatedUser = { ...editingUser, ...formData };
-      
-      // Only update password if provided
-      if (!formData.password) {
-        delete updatedUser.password;
+    try {
+      if (editingUser) {
+        // Update existing user
+        const updatedUser = { ...editingUser, ...formData };
+        
+        // Only update password if provided
+        if (!formData.password) {
+          delete updatedUser.password;
+        }
+        
+        // Try Firebase first
+        try {
+          const result = await firebaseService.updateUser(editingUser.id, updatedUser);
+          if (result.success) {
+            const updatedUsers = users.map(user =>
+              user.id === editingUser.id ? updatedUser : user
+            );
+            setUsers(updatedUsers);
+            setAlert({
+              show: true,
+              message: 'Pengguna berjaya dikemaskini (Firebase)',
+              severity: 'success'
+            });
+            handleCloseDialog();
+            return;
+          }
+        } catch (error) {
+          console.log('Firebase update failed, using localStorage');
+        }
+        
+        // Fallback to localStorage
+        const updatedUsers = users.map(user =>
+          user.id === editingUser.id ? updatedUser : user
+        );
+        setUsers(updatedUsers);
+        setAlert({
+          show: true,
+          message: 'Pengguna berjaya dikemaskini (Local)',
+          severity: 'success'
+        });
+      } else {
+        // Add new user
+        const newUser = {
+          id: uuidv4(),
+          ...formData
+        };
+        
+        // Try Firebase first
+        try {
+          const result = await firebaseService.addUser(newUser);
+          if (result.success) {
+            newUser.id = result.id; // Use Firebase ID
+            setUsers([...users, newUser]);
+            setAlert({
+              show: true,
+              message: 'Pengguna berjaya ditambah (Firebase)',
+              severity: 'success'
+            });
+            handleCloseDialog();
+            return;
+          }
+        } catch (error) {
+          console.log('Firebase add failed, using localStorage');
+        }
+        
+        // Fallback to localStorage
+        setUsers([...users, newUser]);
+        setAlert({
+          show: true,
+          message: 'Pengguna berjaya ditambah (Local)',
+          severity: 'success'
+        });
       }
-      
-      const updatedUsers = users.map(user =>
-        user.id === editingUser.id ? updatedUser : user
-      );
-      setUsers(updatedUsers);
+    } catch (error) {
       setAlert({
         show: true,
-        message: 'Pengguna berjaya dikemaskini',
-        severity: 'success'
-      });
-    } else {
-      // Add new user
-      const newUser = {
-        id: uuidv4(),
-        ...formData
-      };
-      setUsers([...users, newUser]);
-      setAlert({
-        show: true,
-        message: 'Pengguna berjaya ditambah',
-        severity: 'success'
+        message: 'Ralat: ' + error.message,
+        severity: 'error'
       });
     }
+    
     handleCloseDialog();
   };
 
-  const handleDeleteUser = (userId) => {
+  const handleDeleteUser = async (userId) => {
     if (window.confirm('Adakah anda pasti mahu memadamkan pengguna ini?')) {
-      const updatedUsers = users.filter(user => user.id !== userId);
-      setUsers(updatedUsers);
-      setAlert({
-        show: true,
-        message: 'Pengguna berjaya dipadamkan',
-        severity: 'success'
-      });
+      try {
+        // Try Firebase first
+        try {
+          const result = await firebaseService.deleteUser(userId);
+          if (result.success) {
+            const updatedUsers = users.filter(user => user.id !== userId);
+            setUsers(updatedUsers);
+            setAlert({
+              show: true,
+              message: 'Pengguna berjaya dipadamkan (Firebase)',
+              severity: 'success'
+            });
+            return;
+          }
+        } catch (error) {
+          console.log('Firebase delete failed, using localStorage');
+        }
+        
+        // Fallback to localStorage
+        const updatedUsers = users.filter(user => user.id !== userId);
+        setUsers(updatedUsers);
+        setAlert({
+          show: true,
+          message: 'Pengguna berjaya dipadamkan (Local)',
+          severity: 'success'
+        });
+      } catch (error) {
+        setAlert({
+          show: true,
+          message: 'Ralat: ' + error.message,
+          severity: 'error'
+        });
+      }
     }
   };
 

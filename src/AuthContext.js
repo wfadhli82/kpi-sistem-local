@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { firebaseService } from './services/firebaseService';
 
 const AuthContext = createContext({});
 
@@ -55,8 +56,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Function to get user info from localStorage
-  const getUserInfo = (email) => {
+  // Function to get user info from Firebase or localStorage
+  const getUserInfo = async (email) => {
+    try {
+      // Try Firebase first
+      const result = await firebaseService.getUserByEmail(email);
+      if (result.success && result.user) {
+        return { 
+          role: result.user.role, 
+          department: result.user.department 
+        };
+      }
+    } catch (error) {
+      console.log('Firebase not available, using localStorage');
+    }
+    
+    // Fallback to localStorage
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     const matchingUsers = users.filter(u => u.email === email);
     if (matchingUsers.length === 0) {
@@ -77,9 +92,10 @@ export const AuthProvider = ({ children }) => {
     if (stored) {
       const userObj = JSON.parse(stored);
       setUser(userObj);
-      const userInfo = getUserInfo(userObj.email);
-      setUserRole(userInfo.role);
-      setUserDepartment(userInfo.department);
+      getUserInfo(userObj.email).then(userInfo => {
+        setUserRole(userInfo.role);
+        setUserDepartment(userInfo.department);
+      });
     } else {
       setUser(null);
       setUserRole(null);
@@ -91,9 +107,10 @@ export const AuthProvider = ({ children }) => {
   // When user changes (login/logout), update role/department
   useEffect(() => {
     if (user) {
-      const userInfo = getUserInfo(user.email);
-      setUserRole(userInfo.role);
-      setUserDepartment(userInfo.department);
+      getUserInfo(user.email).then(userInfo => {
+        setUserRole(userInfo.role);
+        setUserDepartment(userInfo.department);
+      });
     } else {
       setUserRole(null);
       setUserDepartment(null);
