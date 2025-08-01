@@ -96,7 +96,7 @@ function Login() {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundImage: 'url(/menara-maiwp.jpg)',
+        backgroundImage: 'url(/kpi-sistem-local/menara-maiwp.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         opacity: 0.15,
@@ -111,7 +111,7 @@ function Login() {
         padding: '60px 20px 40px 20px'
       }}>
         <img 
-          src="/logo-maiwp.png" 
+          src="/kpi-sistem-local/logo-maiwp.png" 
           alt="MAIWP Logo" 
           style={{ 
             height: '80px', 
