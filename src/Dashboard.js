@@ -56,11 +56,11 @@ function kiraPeratusPencapaian(kpi) {
     return null;
   }
   if (kpi.kategori === "Peratus Minimum") {
-    const y = parseFloat(kpi.peratusMinimum?.y);
-    const x = parseFloat(kpi.peratusMinimum?.x);
+    const peruntukan = parseFloat(kpi.peratusMinimum?.y);
+    const belanja = parseFloat(kpi.peratusMinimum?.x);
     const target = parseFloat(kpi.target);
-    if (!isNaN(y) && y > 0 && !isNaN(x) && !isNaN(target)) {
-      return peratusMinimum(y, x, target);
+    if (!isNaN(peruntukan) && peruntukan > 0 && !isNaN(belanja) && !isNaN(target)) {
+      return peratusMinimum(peruntukan, belanja, target);
     }
     return null;
   }
