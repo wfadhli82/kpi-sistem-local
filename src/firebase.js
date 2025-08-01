@@ -3,14 +3,14 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Firebase configuration
-// You'll need to replace these with your actual Firebase config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDwLTPT0MkOz697T86qumpSmC8BHFlATuM",
+  authDomain: "kpi-sistem-maiwp.firebaseapp.com",
+  projectId: "kpi-sistem-maiwp",
+  storageBucket: "kpi-sistem-maiwp.firebasestorage.app",
+  messagingSenderId: "71862519812",
+  appId: "1:71862519812:web:5b3e2353f563acd57bcd51",
+  measurementId: "G-2K8LEGD8YT"
 };
 
 // Initialize Firebase
