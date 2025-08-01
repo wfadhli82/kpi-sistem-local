@@ -713,7 +713,7 @@ export default function App() {
               <MainLayout><AdminUtama kpiList={kpiList} setKpiList={setKpiList} handleDownloadExcel={handleDownloadExcel} handleExcelUpload={handleExcelUpload} /></MainLayout>
             } />
             <Route path="/admin-bahagian" element={
-              <MainLayout><AdminBahagian kpiList={kpiList} /></MainLayout>
+              <MainLayout><UserInterface kpiList={kpiList} onUpdateKPI={handleUpdateKPI} /></MainLayout>
             } />
             <Route path="/user-management" element={
               <MainLayout><UserManagement /></MainLayout>
