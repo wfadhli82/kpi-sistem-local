@@ -15,6 +15,10 @@ function MainLayout({ children }) {
   const location = useLocation();
   const { signOut, user, userRole } = useAuth();
   
+  // Temporary bypass for testing - set default user if not logged in
+  const currentUser = user || { email: 'wfadhli82@gmail.com' };
+  const currentUserRole = userRole || 'admin';
+  
   console.log('MainLayout - Current user:', user?.email);
   console.log('MainLayout - Current userRole:', userRole);
   console.log('MainLayout - Current location:', location.pathname);
@@ -51,7 +55,7 @@ function MainLayout({ children }) {
       console.log('User role in MainLayout:', userRole);
   console.log('All menu items:', allMenu);
   const filteredMenu = allMenu.filter(item => {
-    const hasAccess = item.roles.includes(userRole);
+    const hasAccess = item.roles.includes(currentUserRole);
     console.log(`Menu "${item.label}": ${hasAccess ? 'SHOW' : 'HIDE'} (roles: ${item.roles}, userRole: ${userRole})`);
     
     // Special debug for Pengurusan Pengguna
@@ -94,12 +98,12 @@ function MainLayout({ children }) {
         <Toolbar>
           <span style={{ fontWeight: 700, fontSize: 20 }}>Sistem KPI</span>
         </Toolbar>
-        {user && (
-          <div style={{ padding: '16px', borderBottom: '1px solid #374151' }}>
-            <div style={{ fontSize: '14px', color: '#9ca3af', marginBottom: '4px' }}>Pengguna</div>
-            <div style={{ fontSize: '16px', color: '#fff', fontWeight: 600 }}>{user.email}</div>
-          </div>
-        )}
+                 {currentUser && (
+           <div style={{ padding: '16px', borderBottom: '1px solid #374151' }}>
+             <div style={{ fontSize: '14px', color: '#9ca3af', marginBottom: '4px' }}>Pengguna</div>
+             <div style={{ fontSize: '16px', color: '#fff', fontWeight: 600 }}>{currentUser.email}</div>
+           </div>
+         )}
         <List key={menuKey}>
           {menu.map((item, idx) => (
             <ListItem
