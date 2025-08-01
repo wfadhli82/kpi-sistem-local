@@ -127,9 +127,6 @@ function MainLayout({ children }) {
           },
         }}
       >
-        <Toolbar>
-          <span style={{ fontWeight: 700, fontSize: 20 }}>i-Prestasi</span>
-        </Toolbar>>
         {currentUser && (
           <div style={{ padding: '16px', borderBottom: '1px solid #374151' }}>
             <div style={{ fontSize: '14px', color: '#9ca3af', marginBottom: '4px' }}>Pengguna</div>
