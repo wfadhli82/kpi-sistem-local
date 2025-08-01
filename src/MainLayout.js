@@ -96,7 +96,7 @@ function MainLayout({ children }) {
         }}
       >
         <Toolbar>
-          <span style={{ fontWeight: 700, fontSize: 20 }}>Sistem KPI</span>
+                       <span style={{ fontWeight: 700, fontSize: 20 }}>i-Prestasi</span>
         </Toolbar>
         {currentUser && (
           <div style={{ padding: '16px', borderBottom: '1px solid #374151' }}>

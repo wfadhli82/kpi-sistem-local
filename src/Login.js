@@ -220,9 +220,9 @@ function Login() {
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#333' }}>
-                Kata Laluan: <span style={{ color: '#666', fontSize: '0.9rem', fontWeight: 'normal' }}>(Opsional untuk user tanpa password)</span>
-              </label>
+                             <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#333' }}>
+                 Kata Laluan:
+               </label>
               <input
                 type="password"
                 value={password}

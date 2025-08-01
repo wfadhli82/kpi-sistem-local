@@ -263,8 +263,16 @@ function Dashboard({ kpiList = [] }) {
         {/* Header */}
         <AppBar position="static" elevation={0} sx={{ bgcolor: '#fff', color: '#212b36', mb: 3 }}>
           <Toolbar>
+            <img 
+              src="/kpi-sistem-local/logo-maiwp.png" 
+              alt="MAIWP Logo" 
+              style={{ 
+                height: '40px', 
+                marginRight: '16px'
+              }} 
+            />
             <Typography variant="h5" sx={{ flexGrow: 1 }}>
-              Dashboard
+              i-Prestasi
             </Typography>
           </Toolbar>
         </AppBar>
