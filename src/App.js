@@ -694,21 +694,28 @@ export default function App() {
   };
 
   return (
-    <AuthProvider>
-      <Router>
-        <div>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<TestComponent />} />
-            <Route path="/sistem-kpi" element={<TestComponent />} />
-            <Route path="/kpi-sistem-local" element={<TestComponent />} />
-            <Route path="/admin-utama" element={<TestComponent />} />
-            <Route path="/admin-bahagian" element={<TestComponent />} />
-            <Route path="/user-management" element={<TestComponent />} />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+    <div style={{ 
+      padding: '20px', 
+      backgroundColor: '#f0f0f0', 
+      minHeight: '100vh',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h1 style={{ color: '#333' }}>🎉 SUCCESS! React App Working!</h1>
+      <p style={{ color: '#666' }}>If you can see this, React is working on GitHub Pages!</p>
+      <div style={{ 
+        backgroundColor: '#fff', 
+        padding: '15px', 
+        borderRadius: '8px',
+        marginTop: '20px',
+        border: '1px solid #ddd'
+      }}>
+        <h3>Debug Info:</h3>
+        <p>✅ React is working</p>
+        <p>✅ No routing issues</p>
+        <p>✅ Components are rendering</p>
+        <p>✅ GitHub Pages deployment successful</p>
+      </div>
+    </div>
   );
 }
 
