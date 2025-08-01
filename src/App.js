@@ -7,6 +7,7 @@ import Navbar from "./Navbar";
 import Dashboard from "./Dashboard";
 import { NumericFormat } from 'react-number-format';
 import AdminUtama from './AdminUtama';
+import AdminBahagian from './AdminBahagian';
 import MainLayout from './MainLayout';
 import Login from './Login';
 import { AuthProvider, useAuth } from './AuthContext';
@@ -694,28 +695,33 @@ export default function App() {
   };
 
   return (
-    <div style={{ 
-      padding: '20px', 
-      backgroundColor: '#f0f0f0', 
-      minHeight: '100vh',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <h1 style={{ color: '#333' }}>🎉 SUCCESS! React App Working!</h1>
-      <p style={{ color: '#666' }}>If you can see this, React is working on GitHub Pages!</p>
-      <div style={{ 
-        backgroundColor: '#fff', 
-        padding: '15px', 
-        borderRadius: '8px',
-        marginTop: '20px',
-        border: '1px solid #ddd'
-      }}>
-        <h3>Debug Info:</h3>
-        <p>✅ React is working</p>
-        <p>✅ No routing issues</p>
-        <p>✅ Components are rendering</p>
-        <p>✅ GitHub Pages deployment successful</p>
-      </div>
-    </div>
+    <AuthProvider>
+      <Router>
+        <div>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={
+              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+            } />
+            <Route path="/sistem-kpi" element={
+              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+            } />
+            <Route path="/kpi-sistem-local" element={
+              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+            } />
+            <Route path="/admin-utama" element={
+              <MainLayout><AdminUtama kpiList={kpiList} setKpiList={setKpiList} handleDownloadExcel={handleDownloadExcel} handleExcelUpload={handleExcelUpload} /></MainLayout>
+            } />
+            <Route path="/admin-bahagian" element={
+              <MainLayout><AdminBahagian kpiList={kpiList} /></MainLayout>
+            } />
+            <Route path="/user-management" element={
+              <MainLayout><UserManagement /></MainLayout>
+            } />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -266,12 +266,6 @@ function Dashboard({ kpiList = [] }) {
             <Typography variant="h5" sx={{ flexGrow: 1 }}>
               Dashboard
             </Typography>
-            <IconButton color="inherit">
-              <NotificationsIcon />
-            </IconButton>
-            <Typography variant="subtitle1" sx={{ ml: 2 }}>
-              Wan Fadhli
-            </Typography>
           </Toolbar>
         </AppBar>
         {/* Summary Cards */}

@@ -40,6 +40,7 @@ const UserManagement = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    password: '',
     role: 'user',
     department: ''
   });
@@ -64,6 +65,7 @@ const UserManagement = () => {
       setFormData({
         name: user.name,
         email: user.email,
+        password: '', // Don't show existing password
         role: user.role,
         department: user.department
       });
@@ -85,6 +87,7 @@ const UserManagement = () => {
     setFormData({
       name: '',
       email: '',
+      password: '',
       role: 'user',
       department: ''
     });
@@ -107,6 +110,16 @@ const UserManagement = () => {
       return;
     }
 
+    // Check if password is required for new users
+    if (!editingUser && !formData.password) {
+      setAlert({
+        show: true,
+        message: 'Kata laluan diperlukan untuk pengguna baru',
+        severity: 'error'
+      });
+      return;
+    }
+
     // Check if department is required for admin_bahagian
     if (formData.role === 'admin_bahagian' && !formData.department) {
       setAlert({
@@ -119,10 +132,15 @@ const UserManagement = () => {
 
     if (editingUser) {
       // Update existing user
+      const updatedUser = { ...editingUser, ...formData };
+      
+      // Only update password if provided
+      if (!formData.password) {
+        delete updatedUser.password;
+      }
+      
       const updatedUsers = users.map(user =>
-        user.id === editingUser.id
-          ? { ...user, ...formData }
-          : user
+        user.id === editingUser.id ? updatedUser : user
       );
       setUsers(updatedUsers);
       setAlert({
@@ -263,6 +281,19 @@ const UserManagement = () => {
             value={formData.email}
             onChange={handleInputChange}
             sx={{ mb: 2 }}
+          />
+          <TextField
+            margin="dense"
+            name="password"
+            label="Kata Laluan"
+            type="password"
+            fullWidth
+            variant="outlined"
+            value={formData.password}
+            onChange={handleInputChange}
+            sx={{ mb: 2 }}
+            required={!editingUser}
+            helperText={editingUser ? "Kosongkan jika tidak mahu tukar kata laluan" : "Kata laluan diperlukan untuk pengguna baru"}
           />
           <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel>Peranan</InputLabel>
