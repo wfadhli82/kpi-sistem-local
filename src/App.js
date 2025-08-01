@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import LandingPage from "./LandingPage";
 import UserInterface from "./UserInterface";
 import * as XLSX from "xlsx";
