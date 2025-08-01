@@ -100,7 +100,7 @@ function MainLayout({ children }) {
       >
         <Toolbar>
           <img 
-            src="/kpi-sistem-local/logo-maiwp.png" 
+            src="/kpi-sistem-local/logos/logo-maiwp-new.png" 
             alt="MAIWP Logo" 
             style={{ 
               height: '40px', 
@@ -127,12 +127,6 @@ function MainLayout({ children }) {
           },
         }}
       >
-        {currentUser && (
-          <div style={{ padding: '16px', borderBottom: '1px solid #374151' }}>
-            <div style={{ fontSize: '14px', color: '#9ca3af', marginBottom: '4px' }}>Pengguna</div>
-            <div style={{ fontSize: '16px', color: '#fff', fontWeight: 600 }}>{currentUser.email}</div>
-          </div>
-        )}
         <List key={menuKey}>
           {menu.map((item, idx) => (
             <ListItem
@@ -164,9 +158,9 @@ function MainLayout({ children }) {
           ))}
         </List>
       </Drawer>
-             <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px' }}>
-         {children}
-       </Box>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px' }}>
+        {children}
+      </Box>
     </Box>
   );
 }
