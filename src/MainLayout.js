@@ -110,6 +110,18 @@ function MainLayout({ children }) {
           <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
             Sistem Pemantauan Prestasi MAIWP (i-Prestasi)
           </Typography>
+          {currentUser && (
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              color: '#666',
+              fontSize: '14px'
+            }}>
+              <span style={{ fontWeight: 500 }}>Pengguna:</span>
+              <span style={{ fontWeight: 600, color: '#1976d2' }}>{currentUser.email}</span>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       
