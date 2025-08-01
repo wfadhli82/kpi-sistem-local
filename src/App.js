@@ -13,6 +13,33 @@ import { AuthProvider, useAuth } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import UserManagement from './UserManagement';
 
+// Simple test component to debug white screen
+function TestComponent() {
+  return (
+    <div style={{ 
+      padding: '20px', 
+      backgroundColor: '#f0f0f0', 
+      minHeight: '100vh',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h1 style={{ color: '#333' }}>✅ Test Component Loaded!</h1>
+      <p style={{ color: '#666' }}>If you can see this, the app is working.</p>
+      <div style={{ 
+        backgroundColor: '#fff', 
+        padding: '15px', 
+        borderRadius: '8px',
+        marginTop: '20px',
+        border: '1px solid #ddd'
+      }}>
+        <h3>Debug Info:</h3>
+        <p>✅ React is working</p>
+        <p>✅ Routing is working</p>
+        <p>✅ Components are rendering</p>
+      </div>
+    </div>
+  );
+}
+
 const departments = [
   "BKP", "MCP", "BWP", "UI", "UUU", "BPA", "MCL", "UAD", "BPPH", "UKK", "BPSM", "BAZ", "BTM", "BPI - Dar Assaadah", "BPI - Darul Ilmi", "BPI - Darul Kifayah", "BPI - HQ", "BPI - IKB", "BPI - PMA", "BPI - SMA-MAIWP", "BPI - SMISTA"
 ];
@@ -672,30 +699,12 @@ export default function App() {
         <div>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={
-              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
-            } />
-            <Route path="/sistem-kpi" element={
-              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
-            } />
-            <Route path="/kpi-sistem-local" element={
-              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
-            } />
-            <Route path="/admin-utama" element={
-              <ProtectedRoute>
-                <MainLayout><AdminUtama kpiList={kpiList} setKpiList={setKpiList} handleDownloadExcel={handleDownloadExcel} handleExcelUpload={handleExcelUpload} /></MainLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/admin-bahagian" element={
-              <ProtectedRoute>
-                <MainLayout><UserInterface kpiList={kpiList} onUpdateKPI={handleUpdateKPI} /></MainLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/user-management" element={
-              <ProtectedRoute>
-                <MainLayout><UserManagement /></MainLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<TestComponent />} />
+            <Route path="/sistem-kpi" element={<TestComponent />} />
+            <Route path="/kpi-sistem-local" element={<TestComponent />} />
+            <Route path="/admin-utama" element={<TestComponent />} />
+            <Route path="/admin-bahagian" element={<TestComponent />} />
+            <Route path="/user-management" element={<TestComponent />} />
           </Routes>
         </div>
       </Router>
