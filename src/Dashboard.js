@@ -56,8 +56,8 @@ function kiraPeratusPencapaian(kpi) {
     return null;
   }
   if (kpi.kategori === "Peratus Minimum") {
-    const y = parseFloat(kpi.peratus?.y);
-    const x = parseFloat(kpi.peratus?.x);
+    const y = parseFloat(kpi.peratusMinimum?.y);
+    const x = parseFloat(kpi.peratusMinimum?.x);
     const target = parseFloat(kpi.target);
     if (!isNaN(y) && y > 0 && !isNaN(x) && !isNaN(target)) {
       return peratusMinimum(y, x, target);
