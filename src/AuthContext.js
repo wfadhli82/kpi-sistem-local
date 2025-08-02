@@ -111,10 +111,25 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     initializeDefaultUsers();
-    // Force login - always start with no user session
-    setUser(null);
-    setUserRole(null);
-    setUserDepartment(null);
+    
+    // Check if user session exists in localStorage
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+        console.log('✅ Auto-login from localStorage:', userData.email);
+      } catch (error) {
+        console.error('❌ Error parsing saved user:', error);
+        localStorage.removeItem('currentUser');
+        setUser(null);
+      }
+    } else {
+      // No saved session - force login
+      setUser(null);
+      setUserRole(null);
+      setUserDepartment(null);
+    }
     setLoading(false);
   }, []);
 
