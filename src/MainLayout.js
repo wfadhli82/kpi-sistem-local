@@ -5,7 +5,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PeopleIcon from '@mui/icons-material/People';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const drawerWidth = 220;
@@ -143,11 +143,11 @@ function MainLayout({ children }) {
           {menu.map((item, idx) => (
             <ListItem
               key={item.label}
+              component={item.path ? Link : 'div'}
+              to={item.path}
               onClick={() => {
                 if (item.action) {
                   item.action();
-                } else if (item.path) {
-                  navigate(item.path);
                 }
               }}
               sx={{
@@ -159,6 +159,7 @@ function MainLayout({ children }) {
                 borderRadius: 2,
                 mb: 0.5,
                 transition: 'background 0.2s',
+                textDecoration: 'none',
                 '&:hover': {
                   bgcolor: item.path ? '#1976d2' : 'inherit',
                 },
