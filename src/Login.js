@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import app from './firebase';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -8,21 +10,42 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Helper: get users from localStorage
-  const getUsers = () => JSON.parse(localStorage.getItem('users') || '[]');
-  // Helper: save users to localStorage
+  // Helper: get users from Firebase and localStorage
+  const getUsers = async () => {
+    try {
+      // Try to get users from Firebase first
+      const db = getFirestore(app);
+      const usersCollection = collection(db, 'users');
+      const querySnapshot = await getDocs(usersCollection);
+      
+      const firebaseUsers = [];
+      querySnapshot.forEach((doc) => {
+        firebaseUsers.push({ id: doc.id, ...doc.data() });
+      });
+      
+      console.log('✅ Loaded users from Firebase:', firebaseUsers.length);
+      return firebaseUsers;
+    } catch (error) {
+      console.error('❌ Error loading users from Firebase:', error);
+      // Fallback to localStorage
+      return JSON.parse(localStorage.getItem('users') || '[]');
+    }
+  };
+  
+  // Helper: save users to localStorage (for backward compatibility)
   const saveUsers = (users) => localStorage.setItem('users', JSON.stringify(users));
 
   // Helper: set current user session
   const setCurrentUser = (user) => localStorage.setItem('currentUser', JSON.stringify(user));
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setTimeout(() => {
-      const users = getUsers();
-      console.log('All users in localStorage:', users);
+    
+    try {
+      const users = await getUsers();
+      console.log('All users from Firebase/localStorage:', users);
       console.log('Attempting login with:', { email, password });
       
       // Find user by email
@@ -50,7 +73,11 @@ function Login() {
       setCurrentUser(user);
       setLoading(false);
       navigate('/');
-    }, 500);
+    } catch (error) {
+      console.error('❌ Login error:', error);
+      setError('Ralat sistem. Sila cuba lagi.');
+      setLoading(false);
+    }
   };
 
   const handleSignUp = (e) => {
