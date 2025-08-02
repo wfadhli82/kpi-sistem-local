@@ -27,7 +27,7 @@ import {
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import app from './firebase';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
 
 // Available departments
 const departments = [
@@ -48,41 +48,8 @@ const UserManagement = () => {
     department: ''
   });
   const [alert, setAlert] = useState({ show: false, message: '', severity: 'success' });
-  const [firebaseTestResult, setFirebaseTestResult] = useState('');
 
-  // Test Firebase connection
-  const testFirebaseConnection = async () => {
-    try {
-      const db = getFirestore(app);
-      const testCollection = collection(db, 'test');
-      
-      // Try to add a test document
-      const testDoc = await addDoc(testCollection, {
-        test: 'Firebase connection test',
-        timestamp: new Date()
-      });
-      
-      // Try to read the test document
-      await getDocs(testCollection);
-      
-      // Delete the test document
-      await deleteDoc(doc(db, 'test', testDoc.id));
-      
-      setFirebaseTestResult('✅ Firebase connection successful! Test document created and deleted.');
-      setAlert({
-        show: true,
-        message: 'Firebase connection test successful!',
-        severity: 'success'
-      });
-    } catch (error) {
-      setFirebaseTestResult('❌ Firebase connection failed: ' + error.message);
-      setAlert({
-        show: true,
-        message: 'Firebase connection test failed: ' + error.message,
-        severity: 'error'
-      });
-    }
-  };
+
 
   // Load users from Firebase on component mount
   useEffect(() => {
@@ -285,32 +252,16 @@ const UserManagement = () => {
          <Typography variant="h4" component="h1" gutterBottom>
            Pengurusan Pengguna
          </Typography>
-         <Box>
-           <Button
-             variant="outlined"
-             onClick={testFirebaseConnection}
-             sx={{ mr: 2 }}
-           >
-             Test Firebase
-           </Button>
-           <Button
-             variant="contained"
-             startIcon={<Add />}
-             onClick={() => handleOpenDialog()}
-           >
-             Tambah Pengguna
-           </Button>
-         </Box>
+                   <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => handleOpenDialog()}
+          >
+            Tambah Pengguna
+          </Button>
        </Box>
 
-       {firebaseTestResult && (
-         <Alert
-           severity={firebaseTestResult.includes('✅') ? 'success' : 'error'}
-           sx={{ mb: 2 }}
-         >
-           {firebaseTestResult}
-         </Alert>
-       )}
+       
 
       {alert.show && (
         <Alert
