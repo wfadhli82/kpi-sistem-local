@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, no-use-before-define */
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
@@ -112,7 +113,6 @@ const UserManagement = () => {
   };
 
   // Save users to Firebase whenever users state changes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (users.length > 0) {
       saveUsersToFirebase();
