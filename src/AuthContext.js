@@ -138,11 +138,17 @@ export const AuthProvider = ({ children }) => {
     setUserDepartment(null);
   };
 
+  const signIn = (userData) => {
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+    setUser(userData);
+  };
+
   const value = {
     user,
     userRole,
     userDepartment,
     signOut,
+    signIn,
     loading
   };
 

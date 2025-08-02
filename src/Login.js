@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import app from './firebase';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { useAuth } from './AuthContext';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   // Helper: get users from Firebase and localStorage
   const getUsers = async () => {
@@ -35,8 +37,7 @@ function Login() {
   // Helper: save users to localStorage (for backward compatibility)
   const saveUsers = (users) => localStorage.setItem('users', JSON.stringify(users));
 
-  // Helper: set current user session
-  const setCurrentUser = (user) => localStorage.setItem('currentUser', JSON.stringify(user));
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -70,7 +71,7 @@ function Login() {
         console.log('User has no password - allowing login without password');
       }
       
-      setCurrentUser(user);
+      signIn(user);
       setLoading(false);
       navigate('/');
     } catch (error) {
@@ -102,7 +103,7 @@ function Login() {
       };
       users.push(newUser);
       saveUsers(users);
-      setCurrentUser(newUser);
+      signIn(newUser);
       setLoading(false);
       navigate('/');
     }, 500);
