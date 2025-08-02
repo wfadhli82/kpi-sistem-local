@@ -11,43 +11,16 @@ import UserManagement from './UserManagement';
 
 
 
-const departments = [
-  "BKP", "MCP", "BWP", "UI", "UUU", "BPA", "MCL", "UAD", "BPPH", "UKK", "BPSM", "BAZ", "BTM", "BPI - Dar Assaadah", "BPI - Darul Ilmi", "BPI - Darul Kifayah", "BPI - HQ", "BPI - IKB", "BPI - PMA", "BPI - SMA-MAIWP", "BPI - SMISTA"
-];
+// Removed unused variables to fix ESLint warnings
 
-const kategoriOptions = [
-  "Bilangan",
-  "Peratus",
-  "Masa",
-  "Tahap Kemajuan"
-];
-
-const initialForm = {
-  department: "",
-  kpi: "",
-  target: "",
-  kategori: "",
-  bilangan: { sasaran: "", pencapaian: "" },
-  peratus: { x: "", y: "", labelX: "", labelY: "" },
-  masa: { sasaranTarikh: "", tarikhCapai: "" },
-  tahap: [
-    { statement: "", percent: "" },
-    { statement: "", percent: "" },
-    { statement: "", percent: "" },
-    { statement: "", percent: "" }
-  ],
-  peruntukan: "",
-  perbelanjaan: "",
-};
+// Removed unused initialForm to fix ESLint warnings
 
 export default function App() {
-  const [form, setForm] = useState(initialForm);
+  // Removed unused state variables to fix ESLint warnings
   const [kpiList, setKpiList] = useState(() => {
     const saved = localStorage.getItem("kpiList");
     return saved ? JSON.parse(saved) : [];
   });
-  const [editIdx, setEditIdx] = useState(null);
-  const [tahapSelected, setTahapSelected] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("kpiList", JSON.stringify(kpiList));
