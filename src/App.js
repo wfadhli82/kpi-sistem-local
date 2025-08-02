@@ -13,6 +13,7 @@ import Login from './Login';
 import { AuthProvider, useAuth } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import UserManagement from './UserManagement';
+import app from './firebase';
 
 // Simple test component to debug white screen
 function TestComponent() {
@@ -78,6 +79,16 @@ export default function App() {
   });
   const [editIdx, setEditIdx] = useState(null);
   const [tahapSelected, setTahapSelected] = useState(null);
+
+  // Test Firebase connection
+  useEffect(() => {
+    console.log('Firebase app initialized:', app);
+    console.log('Firebase config:', {
+      apiKey: process.env.REACT_APP_FIREBASE_API_KEY ? '✅ Set' : '❌ Missing',
+      authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ? '✅ Set' : '❌ Missing',
+      projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID ? '✅ Set' : '❌ Missing'
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("kpiList", JSON.stringify(kpiList));
