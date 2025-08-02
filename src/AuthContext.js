@@ -111,21 +111,10 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     initializeDefaultUsers();
-    // Check current user from localStorage
-    const stored = localStorage.getItem('currentUser');
-    if (stored) {
-      const userObj = JSON.parse(stored);
-      setUser(userObj);
-      // Get user info from Firebase/localStorage
-      getUserInfo(userObj.email).then(userInfo => {
-        setUserRole(userInfo.role);
-        setUserDepartment(userInfo.department);
-      });
-    } else {
-      setUser(null);
-      setUserRole(null);
-      setUserDepartment(null);
-    }
+    // Force login - always start with no user session
+    setUser(null);
+    setUserRole(null);
+    setUserDepartment(null);
     setLoading(false);
   }, []);
 

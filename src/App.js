@@ -6,14 +6,26 @@ import Dashboard from "./Dashboard";
 import AdminUtama from './AdminUtama';
 import MainLayout from './MainLayout';
 import Login from './Login';
-import { AuthProvider } from './AuthContext';
+import { AuthProvider, useAuth } from './AuthContext';
 import UserManagement from './UserManagement';
+import { Navigate } from 'react-router-dom';
 
 
 
-// Removed unused variables to fix ESLint warnings
-
-// Removed unused initialForm to fix ESLint warnings
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+};
 
 export default function App() {
   // Removed unused state variables to fix ESLint warnings
@@ -553,22 +565,34 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={
-              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+              <ProtectedRoute>
+                <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+              </ProtectedRoute>
             } />
             <Route path="/sistem-kpi" element={
-              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+              <ProtectedRoute>
+                <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+              </ProtectedRoute>
             } />
             <Route path="/kpi-sistem-local" element={
-              <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+              <ProtectedRoute>
+                <MainLayout><Dashboard kpiList={kpiList} /></MainLayout>
+              </ProtectedRoute>
             } />
             <Route path="/admin-utama" element={
-              <MainLayout><AdminUtama kpiList={kpiList} setKpiList={setKpiList} handleDownloadExcel={handleDownloadExcel} handleExcelUpload={handleExcelUpload} /></MainLayout>
+              <ProtectedRoute>
+                <MainLayout><AdminUtama kpiList={kpiList} setKpiList={setKpiList} handleDownloadExcel={handleDownloadExcel} handleExcelUpload={handleExcelUpload} /></MainLayout>
+              </ProtectedRoute>
             } />
             <Route path="/admin-bahagian" element={
-              <MainLayout><UserInterface kpiList={kpiList} onUpdateKPI={handleUpdateKPI} /></MainLayout>
+              <ProtectedRoute>
+                <MainLayout><UserInterface kpiList={kpiList} onUpdateKPI={handleUpdateKPI} /></MainLayout>
+              </ProtectedRoute>
             } />
             <Route path="/user-management" element={
-              <MainLayout><UserManagement /></MainLayout>
+              <ProtectedRoute>
+                <MainLayout><UserManagement /></MainLayout>
+              </ProtectedRoute>
             } />
           </Routes>
         </div>
