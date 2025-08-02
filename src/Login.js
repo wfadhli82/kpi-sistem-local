@@ -264,7 +264,7 @@ function Login() {
                   outline: 'none',
                   boxSizing: 'border-box'
                 }}
-                placeholder="Masukkan kata laluan (atau kosongkan jika tiada password)"
+                placeholder="Masukkan kata laluan"
               />
             </div>
 
