@@ -112,13 +112,6 @@ const UserManagement = () => {
     }
   };
 
-  // Save users to Firebase whenever users state changes
-  useEffect(() => {
-    if (users.length > 0) {
-      saveUsersToFirebase();
-    }
-  }, [saveUsersToFirebase]);
-
   const saveUsersToFirebase = useCallback(async () => {
     try {
       const db = getFirestore(app);
@@ -148,6 +141,13 @@ const UserManagement = () => {
       localStorage.setItem('users', JSON.stringify(users));
     }
   }, [users]);
+
+  // Save users to Firebase whenever users state changes
+  useEffect(() => {
+    if (users.length > 0) {
+      saveUsersToFirebase();
+    }
+  }, [saveUsersToFirebase]);
 
   const handleOpenDialog = (user = null) => {
     if (user) {
