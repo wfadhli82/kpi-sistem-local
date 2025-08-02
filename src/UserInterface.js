@@ -19,19 +19,7 @@ function UserInterface({ kpiList, onUpdateKPI }) {
     return departments; // Show all departments for admin
   };
 
-  // Filter KPI berdasarkan bahagian dan kategori
-  const filterKPIs = () => {
-    if (!selectedDepartment || !selectedCategory) {
-      setFilteredKPIs([]);
-      return;
-    }
 
-    const filtered = kpiList.filter(kpi => 
-      kpi.department === selectedDepartment && 
-      kpi.kategoriUtama === selectedCategory
-    );
-    setFilteredKPIs(filtered);
-  };
 
   // Handle perubahan dropdown
   const handleDepartmentChange = (e) => {

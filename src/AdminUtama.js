@@ -252,20 +252,7 @@ function AdminUtama({ kpiList, setKpiList, handleDownloadExcel, handleExcelUploa
     }
   };
 
-  // Tambah helper untuk format nombor
-  function formatNumber(val) {
-    console.log('formatNumber input:', val, typeof val);
-    if (val === null || val === undefined || val === "") return "";
-    const num = Number(val);
-    if (isNaN(num)) return val;
-    // Format dengan koma untuk nombor yang lebih besar
-    const formatted = num.toLocaleString('en-US', { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 2 
-    });
-    console.log('formatNumber output:', formatted);
-    return formatted;
-  }
+
 
   // Tambah handler untuk peratusMinimum
   const handlePeratusMinimumChange = (e) => {

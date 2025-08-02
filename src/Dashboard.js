@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Box, CssBaseline, Grid, Paper, IconButton } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Typography, Box, CssBaseline, Grid, Paper } from '@mui/material';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import LogoutIcon from '@mui/icons-material/Logout';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList, Cell } from 'recharts';
-import { useNavigate } from 'react-router-dom';
 
-const drawerWidth = 220;
+
 
 // Tambah fungsi peratusMinimum jika belum ada
 function peratusMinimum(peruntukan, belanja, targetPercent) {
@@ -95,7 +91,6 @@ function kiraPeratusPencapaian(kpi) {
 }
 
 function Dashboard({ kpiList = [] }) {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'kpi', 'sku'
 
   // Tapis data ikut tab

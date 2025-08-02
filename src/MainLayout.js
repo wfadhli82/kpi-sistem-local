@@ -35,7 +35,7 @@ function MainLayout({ children }) {
       console.log('Current user:', user?.email);
       console.log('Menu items should include Pengurusan Pengguna:', userRole === 'admin');
     }
-  }, [userRole, location.pathname]);
+  }, [userRole, location.pathname, user?.email]);
   
   const handleLogout = async () => {
     await signOut();

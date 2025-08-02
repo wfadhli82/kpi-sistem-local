@@ -1,45 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
-import LandingPage from "./LandingPage";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import UserInterface from "./UserInterface";
 import * as XLSX from "xlsx";
-import Navbar from "./Navbar";
 import Dashboard from "./Dashboard";
-import { NumericFormat } from 'react-number-format';
 import AdminUtama from './AdminUtama';
-import AdminBahagian from './AdminBahagian';
 import MainLayout from './MainLayout';
 import Login from './Login';
-import { AuthProvider, useAuth } from './AuthContext';
-import ProtectedRoute from './ProtectedRoute';
+import { AuthProvider } from './AuthContext';
 import UserManagement from './UserManagement';
 
-// Simple test component to debug white screen
-function TestComponent() {
-  return (
-    <div style={{ 
-      padding: '20px', 
-      backgroundColor: '#f0f0f0', 
-      minHeight: '100vh',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <h1 style={{ color: '#333' }}>✅ Test Component Loaded!</h1>
-      <p style={{ color: '#666' }}>If you can see this, the app is working.</p>
-      <div style={{ 
-        backgroundColor: '#fff', 
-        padding: '15px', 
-        borderRadius: '8px',
-        marginTop: '20px',
-        border: '1px solid #ddd'
-      }}>
-        <h3>Debug Info:</h3>
-        <p>✅ React is working</p>
-        <p>✅ Routing is working</p>
-        <p>✅ Components are rendering</p>
-      </div>
-    </div>
-  );
-}
+
 
 const departments = [
   "BKP", "MCP", "BWP", "UI", "UUU", "BPA", "MCL", "UAD", "BPPH", "UKK", "BPSM", "BAZ", "BTM", "BPI - Dar Assaadah", "BPI - Darul Ilmi", "BPI - Darul Kifayah", "BPI - HQ", "BPI - IKB", "BPI - PMA", "BPI - SMA-MAIWP", "BPI - SMISTA"
@@ -83,65 +53,15 @@ export default function App() {
     localStorage.setItem("kpiList", JSON.stringify(kpiList));
   }, [kpiList]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
-  const handleKategoriChange = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      kategori: e.target.value
-    }));
-  };
 
-  const handleBilanganChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      bilangan: {
-        ...prev.bilangan,
-        [name]: value
-      }
-    }));
-  };
 
-  const handlePeratusChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      peratus: {
-        ...prev.peratus,
-        [name]: value
-      }
-    }));
-  };
 
-  const handleMasaChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      masa: {
-        ...prev.masa,
-        [name]: value
-      }
-    }));
-  };
 
-  const handleTahapChange = (idx, field, value) => {
-    setForm((prev) => {
-      const tahap = [...prev.tahap];
-      tahap[idx][field] = value;
-      return { ...prev, tahap };
-    });
-  };
 
-  const handleTahapSelect = (idx) => {
-    setTahapSelected(idx);
-  };
+
+
+
 
   function formatRM(value) {
     if (!value || value === "" || value === "0" || value === "0.00") return "RM 0.00";
@@ -150,61 +70,9 @@ export default function App() {
     return "RM " + number.toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
-  // Fungsi untuk format currency untuk Excel
-  function formatCurrency(value) {
-    if (!value || value === "" || value === "0" || value === "0.00") return "RM 0.00";
-    const number = Number(value);
-    if (isNaN(number)) return "RM 0.00";
-    return "RM " + number.toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
 
-  const handleCurrencyChange = (e) => {
-    const { name, value } = e.target;
-    // Buang semua kecuali nombor dan titik perpuluhan
-    const raw = value.replace(/[^0-9.]/g, "");
-    setForm(prev => ({
-      ...prev,
-      [name]: raw
-    }));
-  };
 
-  // Fungsi simpan KPI
-  const handleSave = (e) => {
-    e.preventDefault();
-    let dataToSave = { ...form };
-    if (form.kategori === "Tahap Kemajuan") {
-      dataToSave.tahapSelected = tahapSelected;
-    }
-    // Kira % Perbelanjaan
-    const peruntukan = parseFloat(form.peruntukan);
-    const perbelanjaan = parseFloat(form.perbelanjaan);
-    let percentBelanja = "-";
-    if (!isNaN(peruntukan) && peruntukan > 0 && !isNaN(perbelanjaan)) {
-      let percent = (perbelanjaan / peruntukan) * 100;
-      if (percent > 100) percent = 100;
-      percentBelanja = percent.toFixed(2) + "%";
-    }
-    dataToSave.percentBelanja = percentBelanja;
-    if (editIdx !== null) {
-      setKpiList((prev) => prev.map((item, idx) => idx === editIdx ? dataToSave : item));
-      setEditIdx(null);
-    } else {
-      setKpiList((prev) => [...prev, dataToSave]);
-    }
-    setForm(initialForm);
-    setTahapSelected(null);
-  };
 
-  // Fungsi edit KPI
-  const handleEdit = (idx) => {
-    setForm(kpiList[idx]);
-    setEditIdx(idx);
-    if (kpiList[idx].kategori === "Tahap Kemajuan") {
-      setTahapSelected(kpiList[idx].tahapSelected ?? null);
-    } else {
-      setTahapSelected(null);
-    }
-  };
 
   // Fungsi untuk update KPI dari User Interface
   const handleUpdateKPI = (idx, updatedKPI) => {
