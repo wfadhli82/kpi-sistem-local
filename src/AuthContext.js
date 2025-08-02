@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import app from './firebase';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
 const AuthContext = createContext({});
 
@@ -55,19 +57,56 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Function to get user info from localStorage
-  const getUserInfo = (email) => {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const matchingUsers = users.filter(u => u.email === email);
-    if (matchingUsers.length === 0) {
-      return { role: 'user', department: null };
+  // Function to get user info from Firebase and localStorage
+  const getUserInfo = async (email) => {
+    try {
+      // Try to get users from Firebase first
+      const db = getFirestore(app);
+      const usersCollection = collection(db, 'users');
+      const querySnapshot = await getDocs(usersCollection);
+      
+      const firebaseUsers = [];
+      querySnapshot.forEach((doc) => {
+        firebaseUsers.push({ id: doc.id, ...doc.data() });
+      });
+      
+      const matchingUsers = firebaseUsers.filter(u => u.email === email);
+      if (matchingUsers.length === 0) {
+        // Fallback to localStorage
+        const localUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        const localMatchingUsers = localUsers.filter(u => u.email === email);
+        if (localMatchingUsers.length === 0) {
+          return { role: 'user', department: null };
+        }
+        // Priority: admin > admin_bahagian > user
+        const priorityOrder = { 'admin': 3, 'admin_bahagian': 2, 'user': 1 };
+        const highestPriorityUser = localMatchingUsers.reduce((prev, current) => {
+          return (priorityOrder[current.role] || 0) > (priorityOrder[prev.role] || 0) ? current : prev;
+        });
+        return { role: highestPriorityUser.role, department: highestPriorityUser.department };
+      }
+      
+      // Priority: admin > admin_bahagian > user
+      const priorityOrder = { 'admin': 3, 'admin_bahagian': 2, 'user': 1 };
+      const highestPriorityUser = matchingUsers.reduce((prev, current) => {
+        return (priorityOrder[current.role] || 0) > (priorityOrder[prev.role] || 0) ? current : prev;
+      });
+      return { role: highestPriorityUser.role, department: highestPriorityUser.department };
+    } catch (error) {
+      console.error('❌ Error getting user info from Firebase:', error);
+      // Fallback to localStorage
+      const localUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      const localMatchingUsers = localUsers.filter(u => u.email === email);
+      if (localMatchingUsers.length === 0) {
+        return { role: 'user', department: null };
+      }
+      // Priority: admin > admin_bahagian > user
+      const priorityOrder = { 'admin': 3, 'admin_bahagian': 2, 'user': 1 };
+      const highestPriorityUser = localMatchingUsers.reduce((prev, current) => {
+        return (priorityOrder[current.role] || 0) > (priorityOrder[prev.role] || 0) ? current : prev;
+      });
+      return { role: highestPriorityUser.role, department: highestPriorityUser.department };
     }
-    // Priority: admin > admin_bahagian > user
-    const priorityOrder = { 'admin': 3, 'admin_bahagian': 2, 'user': 1 };
-    const highestPriorityUser = matchingUsers.reduce((prev, current) => {
-      return (priorityOrder[current.role] || 0) > (priorityOrder[prev.role] || 0) ? current : prev;
-    });
-    return { role: highestPriorityUser.role, department: highestPriorityUser.department };
   };
 
   useEffect(() => {
@@ -77,9 +116,11 @@ export const AuthProvider = ({ children }) => {
     if (stored) {
       const userObj = JSON.parse(stored);
       setUser(userObj);
-      const userInfo = getUserInfo(userObj.email);
-      setUserRole(userInfo.role);
-      setUserDepartment(userInfo.department);
+      // Get user info from Firebase/localStorage
+      getUserInfo(userObj.email).then(userInfo => {
+        setUserRole(userInfo.role);
+        setUserDepartment(userInfo.department);
+      });
     } else {
       setUser(null);
       setUserRole(null);
@@ -91,9 +132,10 @@ export const AuthProvider = ({ children }) => {
   // When user changes (login/logout), update role/department
   useEffect(() => {
     if (user) {
-      const userInfo = getUserInfo(user.email);
-      setUserRole(userInfo.role);
-      setUserDepartment(userInfo.department);
+      getUserInfo(user.email).then(userInfo => {
+        setUserRole(userInfo.role);
+        setUserDepartment(userInfo.department);
+      });
     } else {
       setUserRole(null);
       setUserDepartment(null);
