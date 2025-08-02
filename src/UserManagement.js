@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -26,7 +26,7 @@ import {
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import app from './firebase';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 // Available departments
 const departments = [
@@ -62,7 +62,7 @@ const UserManagement = () => {
       });
       
       // Try to read the test document
-      const querySnapshot = await getDocs(testCollection);
+      await getDocs(testCollection);
       
       // Delete the test document
       await deleteDoc(doc(db, 'test', testDoc.id));
@@ -112,13 +112,14 @@ const UserManagement = () => {
   };
 
   // Save users to Firebase whenever users state changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (users.length > 0) {
       saveUsersToFirebase();
     }
-  }, [users]);
+  }, [saveUsersToFirebase]);
 
-  const saveUsersToFirebase = async () => {
+  const saveUsersToFirebase = useCallback(async () => {
     try {
       const db = getFirestore(app);
       const usersCollection = collection(db, 'users');
@@ -146,7 +147,7 @@ const UserManagement = () => {
       // Fallback to localStorage
       localStorage.setItem('users', JSON.stringify(users));
     }
-  };
+  }, [users]);
 
   const handleOpenDialog = (user = null) => {
     if (user) {
