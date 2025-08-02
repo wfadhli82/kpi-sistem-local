@@ -578,7 +578,16 @@ export default function App() {
                 // Cari nilai yang mengandungi nombor (biasanya x dan y)
                 const numericValue = value.replace(/,/g, '').replace(/%/g, '');
                 if (!isNaN(parseFloat(numericValue))) {
-                  if (label.includes('x') || label.includes('Perbelanjaan') || label.includes('Amil') || label.includes('Belanja')) {
+                  // Cari label yang mengandungi kata kunci untuk Overall/Sebenar
+                  if (label.includes('Overall') || label.includes('Sebenar')) {
+                    if (label.includes('Overall')) {
+                      y = numericValue;
+                      labelY = label;
+                    } else if (label.includes('Sebenar')) {
+                      x = numericValue;
+                      labelX = label;
+                    }
+                  } else if (label.includes('x') || label.includes('Perbelanjaan') || label.includes('Amil') || label.includes('Belanja')) {
                     x = numericValue;
                     labelX = label;
                   } else if (label.includes('y') || label.includes('Peruntukan') || label.includes('Zakat')) {
@@ -595,10 +604,12 @@ export default function App() {
             const allNumbers = perincian.match(/(\d+(?:,\d+)*)/g);
             if (allNumbers && allNumbers.length >= 2) {
               // Ambil 2 nombor pertama sebagai x dan y
-              x = allNumbers[0].replace(/,/g, '');
-              y = allNumbers[1].replace(/,/g, '');
-              labelX = "Perbelanjaan";
-              labelY = "Peruntukan";
+              // Untuk Peratus Minimum, biasanya format: "Overall: 100 Sebenar: 60"
+              // Jadi nombor pertama adalah Overall (y), nombor kedua adalah Sebenar (x)
+              y = allNumbers[0].replace(/,/g, '');  // Overall
+              x = allNumbers[1].replace(/,/g, '');  // Sebenar
+              labelY = "Overall";
+              labelX = "Sebenar";
             }
           }
           
