@@ -25,6 +25,8 @@ import {
 } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
+import app from './firebase';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 // Available departments
 const departments = [
@@ -45,19 +47,106 @@ const UserManagement = () => {
     department: ''
   });
   const [alert, setAlert] = useState({ show: false, message: '', severity: 'success' });
+  const [firebaseTestResult, setFirebaseTestResult] = useState('');
 
-  // Load users from localStorage on component mount
-  useEffect(() => {
-    const savedUsers = localStorage.getItem('users');
-    if (savedUsers) {
-      setUsers(JSON.parse(savedUsers));
+  // Test Firebase connection
+  const testFirebaseConnection = async () => {
+    try {
+      const db = getFirestore(app);
+      const testCollection = collection(db, 'test');
+      
+      // Try to add a test document
+      const testDoc = await addDoc(testCollection, {
+        test: 'Firebase connection test',
+        timestamp: new Date()
+      });
+      
+      // Try to read the test document
+      const querySnapshot = await getDocs(testCollection);
+      
+      // Delete the test document
+      await deleteDoc(doc(db, 'test', testDoc.id));
+      
+      setFirebaseTestResult('✅ Firebase connection successful! Test document created and deleted.');
+      setAlert({
+        show: true,
+        message: 'Firebase connection test successful!',
+        severity: 'success'
+      });
+    } catch (error) {
+      setFirebaseTestResult('❌ Firebase connection failed: ' + error.message);
+      setAlert({
+        show: true,
+        message: 'Firebase connection test failed: ' + error.message,
+        severity: 'error'
+      });
     }
+  };
+
+  // Load users from Firebase on component mount
+  useEffect(() => {
+    loadUsersFromFirebase();
   }, []);
 
-  // Save users to localStorage whenever users state changes
+  const loadUsersFromFirebase = async () => {
+    try {
+      const db = getFirestore(app);
+      const usersCollection = collection(db, 'users');
+      const querySnapshot = await getDocs(usersCollection);
+      
+      const firebaseUsers = [];
+      querySnapshot.forEach((doc) => {
+        firebaseUsers.push({ id: doc.id, ...doc.data() });
+      });
+      
+      setUsers(firebaseUsers);
+      console.log('✅ Loaded users from Firebase:', firebaseUsers.length);
+    } catch (error) {
+      console.error('❌ Error loading users from Firebase:', error);
+      // Fallback to localStorage if Firebase fails
+      const savedUsers = localStorage.getItem('users');
+      if (savedUsers) {
+        setUsers(JSON.parse(savedUsers));
+      }
+    }
+  };
+
+  // Save users to Firebase whenever users state changes
   useEffect(() => {
-    localStorage.setItem('users', JSON.stringify(users));
+    if (users.length > 0) {
+      saveUsersToFirebase();
+    }
   }, [users]);
+
+  const saveUsersToFirebase = async () => {
+    try {
+      const db = getFirestore(app);
+      const usersCollection = collection(db, 'users');
+      
+      // Clear existing users and add all current users
+      const querySnapshot = await getDocs(usersCollection);
+      querySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+      
+      // Add all current users
+      for (const user of users) {
+        await addDoc(usersCollection, {
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          role: user.role,
+          department: user.department
+        });
+      }
+      
+      console.log('✅ Saved users to Firebase');
+    } catch (error) {
+      console.error('❌ Error saving users to Firebase:', error);
+      // Fallback to localStorage
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+  };
 
   const handleOpenDialog = (user = null) => {
     if (user) {
@@ -191,18 +280,36 @@ const UserManagement = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Pengurusan Pengguna
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => handleOpenDialog()}
-        >
-          Tambah Pengguna
-        </Button>
-      </Box>
+             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+         <Typography variant="h4" component="h1" gutterBottom>
+           Pengurusan Pengguna
+         </Typography>
+         <Box>
+           <Button
+             variant="outlined"
+             onClick={testFirebaseConnection}
+             sx={{ mr: 2 }}
+           >
+             Test Firebase
+           </Button>
+           <Button
+             variant="contained"
+             startIcon={<Add />}
+             onClick={() => handleOpenDialog()}
+           >
+             Tambah Pengguna
+           </Button>
+         </Box>
+       </Box>
+
+       {firebaseTestResult && (
+         <Alert
+           severity={firebaseTestResult.includes('✅') ? 'success' : 'error'}
+           sx={{ mb: 2 }}
+         >
+           {firebaseTestResult}
+         </Alert>
+       )}
 
       {alert.show && (
         <Alert
